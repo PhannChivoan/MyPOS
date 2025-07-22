@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: laravel-app
+    env: php
+    plan: free
+    buildCommand: |
+      mkdir -p public/images
+      chmod -R 775 public/images
+      composer install --no-dev --optimize-autoloader
+      php artisan config:cache
+      php artisan route:cache
+    startCommand: php artisan serve --host 0.0.0.0 --port $PORT

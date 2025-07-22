@@ -3,7 +3,7 @@ set -e
 
 # Run Laravel migrations automatically
 php artisan migrate --force
-php artisan config:cache --force
+php artisan config:cache 
 
 
 # Start Apache in the foreground

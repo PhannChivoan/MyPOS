@@ -21,21 +21,22 @@ class productController extends Controller
         return view('Layout.home',['pro'=>$pro,'cate'=>$cate,'customer'=>$customer]);
     }
     public function create(Request $rq){
-        $name = $rq->name;
-        $price = $rq->price;
-        $cate = $rq->category;
-        $image = $rq->file('pic');
-        $originalName = $image->getClientOriginalName();
-        $fileName = time() . '_' . $originalName;
-        $image->move(public_path('images'), $fileName);
+        // $name = $rq->name;
+        // $price = $rq->price;
+        // $cate = $rq->category;
+        // $image = $rq->file('pic');
+        // $originalName = $image->getClientOriginalName();
+        // $fileName = time() . '_' . $originalName;
+        // $image->move(public_path('images'), $fileName);
 
-        Product::create([
-            'pro_name' => $name,
-            'pro_price' => $price,
-            'cate_id' => $cate,
-            'pro_pic' => $fileName,
-        ]);
-        return redirect('/');
+        // Product::create([
+        //     'pro_name' => $name,
+        //     'pro_price' => $price,
+        //     'cate_id' => $cate,
+        //     'pro_pic' => $fileName,
+        // ]);
+        // return redirect('/');
+        return "Hello";
     }
     public function update(Request $rq){
         $product = Product::find($rq->id);

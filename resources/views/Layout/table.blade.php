@@ -51,7 +51,7 @@
         @foreach($pro as $pros)
         <tr>
             <td>{{ $pros->id }}</td>
-            <td><img src="{{ asset('images/'. $pros->pro_pic) }}" style="width:5rem"/></td>
+            <td><img class="card-img-top" src="{{ url('uploads/' . $pros->pro_pic) }}" style="width:5rem" alt="Product Image" /></td>
             <td>{{ $pros->pro_name }}</td>
             <td>{{ $pros->pro_price }}</td>
             <td>{{ $pros->cate_id }}</td>

@@ -6,6 +6,8 @@ use App\Models\Product;
 use App\Models\Customer;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
 
 class productController extends Controller
 {   
@@ -20,52 +22,29 @@ class productController extends Controller
         $customer = Customer::latest()->get();
         return view('Layout.home',['pro'=>$pro,'cate'=>$cate,'customer'=>$customer]);
     }
-    // public function create(Request $rq){
-    //     $name = $rq->name;
-    //     $price = $rq->price;
-    //     $cate = $rq->category;
-    //     $image = $rq->file('pic');
-    //     $originalName = $image->getClientOriginalName();
-    //     $fileName = time() . '_' . $originalName;
-    //     $image->move(public_path('images'), $fileName);
 
-    //     Product::create([
-    //         'pro_name' => $name,
-    //         'pro_price' => $price,
-    //         'cate_id' => $cate,
-    //         'pro_pic' => $fileName,
-    //     ]);
-    //     return redirect('/');
-    // }
     public function create(Request $rq)
     {
         try {
-            // Check if image is present
             if (!$rq->hasFile('pic')) {
                 return response()->json(['error' => 'No image uploaded'], 400);
             }
 
             $image = $rq->file('pic');
-
-            // Validate the file
             if (!$image->isValid()) {
                 return response()->json(['error' => 'Invalid image uploaded'], 400);
             }
 
-            // Prepare image filename
             $originalName = $image->getClientOriginalName();
             $fileName = time() . '_' . $originalName;
 
-            // Ensure folder exists
-            $destination = public_path('images');
+            $destination = '/mnt/data/images';
             if (!file_exists($destination)) {
                 mkdir($destination, 0775, true);
             }
 
-            // Move image
             $image->move($destination, $fileName);
 
-            // Create Product
             Product::create([
                 'pro_name' => $rq->name,
                 'pro_price' => $rq->price,
@@ -75,7 +54,6 @@ class productController extends Controller
 
             return redirect('/')->with('success', 'Product created successfully');
         } catch (\Exception $e) {
-            // Catch and return any error
             return response()->json([
                 'error' => 'Server Error: ' . $e->getMessage()
             ], 500);
@@ -88,25 +66,45 @@ class productController extends Controller
         $price = $rq->price;
         $cate = $rq->category;
         $fileName = null;
-         if($rq->hasFile('pic')){
 
+        if($rq->hasFile('pic')){
             $image = $rq->file('pic');
             $originalName = $image->getClientOriginalName();
             $fileName = time() . '_' . $originalName;
-            $image->move(public_path('images'), $fileName);
+
+            $destination = '/mnt/data/images';
+            if (!file_exists($destination)) {
+                mkdir($destination, 0775, true);
+            }
+
+            $image->move($destination, $fileName);
         }
+
         $product->pro_name = $name;
         $product->pro_price = $price;
         $product->cate_id = $cate;
-        if($fileName!=null){
+        if($fileName != null){
             $product->pro_pic = $fileName;
         }
         $product->save();
-        return response("Successfuly Update");
+
+        return response("Successfully Updated");
     }
+
     public function destroy($id){
         $product = Product::find($id);
+
+        // Optional: delete the image file
+        if ($product->pro_pic) {
+            $path = '/mnt/data/images/' . $product->pro_pic;
+            if (File::exists($path)) {
+                File::delete($path);
+            }
+        }
+
         $product->delete();
         return redirect("/table");
     }
+
+    // Optional helper route method for serving images (see below)
 }

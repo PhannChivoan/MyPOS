@@ -4,6 +4,21 @@ use App\Http\Controllers\customerController;
 use App\Http\Controllers\categoryController;
 use App\Http\Controllers\orderController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\File;
+
+Route::get('/uploads/{filename}', function ($filename) {
+    $path = '/mnt/data/images/' . $filename;
+
+    if (!File::exists($path)) {
+        abort(404);
+    }
+
+    $file = File::get($path);
+    $type = File::mimeType($path);
+
+    return Response::make($file, 200)->header("Content-Type", $type);
+});
 
 Route::get('/',[productController::class,'index']);
 Route::get('/table',[productController::class,'table']);

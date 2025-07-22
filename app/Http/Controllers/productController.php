@@ -20,24 +20,68 @@ class productController extends Controller
         $customer = Customer::latest()->get();
         return view('Layout.home',['pro'=>$pro,'cate'=>$cate,'customer'=>$customer]);
     }
-    public function create(Request $rq){
-        // $name = $rq->name;
-        // $price = $rq->price;
-        // $cate = $rq->category;
-        // $image = $rq->file('pic');
-        // $originalName = $image->getClientOriginalName();
-        // $fileName = time() . '_' . $originalName;
-        // $image->move(public_path('images'), $fileName);
+    // public function create(Request $rq){
+    //     $name = $rq->name;
+    //     $price = $rq->price;
+    //     $cate = $rq->category;
+    //     $image = $rq->file('pic');
+    //     $originalName = $image->getClientOriginalName();
+    //     $fileName = time() . '_' . $originalName;
+    //     $image->move(public_path('images'), $fileName);
 
-        // Product::create([
-        //     'pro_name' => $name,
-        //     'pro_price' => $price,
-        //     'cate_id' => $cate,
-        //     'pro_pic' => $fileName,
-        // ]);
-        // return redirect('/');
-        return "Hello";
+    //     Product::create([
+    //         'pro_name' => $name,
+    //         'pro_price' => $price,
+    //         'cate_id' => $cate,
+    //         'pro_pic' => $fileName,
+    //     ]);
+    //     return redirect('/');
+    // }
+    public function create(Request $rq)
+    {
+        try {
+            // Check if image is present
+            if (!$rq->hasFile('pic')) {
+                return response()->json(['error' => 'No image uploaded'], 400);
+            }
+
+            $image = $rq->file('pic');
+
+            // Validate the file
+            if (!$image->isValid()) {
+                return response()->json(['error' => 'Invalid image uploaded'], 400);
+            }
+
+            // Prepare image filename
+            $originalName = $image->getClientOriginalName();
+            $fileName = time() . '_' . $originalName;
+
+            // Ensure folder exists
+            $destination = public_path('images');
+            if (!file_exists($destination)) {
+                mkdir($destination, 0775, true);
+            }
+
+            // Move image
+            $image->move($destination, $fileName);
+
+            // Create Product
+            Product::create([
+                'pro_name' => $rq->name,
+                'pro_price' => $rq->price,
+                'cate_id' => $rq->category,
+                'pro_pic' => $fileName,
+            ]);
+
+            return redirect('/')->with('success', 'Product created successfully');
+        } catch (\Exception $e) {
+            // Catch and return any error
+            return response()->json([
+                'error' => 'Server Error: ' . $e->getMessage()
+            ], 500);
+        }
     }
+
     public function update(Request $rq){
         $product = Product::find($rq->id);
         $name = $rq->name;

@@ -1,107 +1,116 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Http;
 use App\Models\Product;
 use App\Models\Customer;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 
-class productController extends Controller
-{   
-    public function table(){
+class ProductController extends Controller
+{
+    public function table()
+    {
         $pro = Product::paginate(5);
         $cate = Category::all();
-        return view('Layout.table',['pro'=>$pro,'cate'=>$cate]);
+        return view('Layout.table', ['pro' => $pro, 'cate' => $cate]);
     }
 
-    public function index(){
+    public function index()
+    {
         $pro = Product::with('category')->get();
         $cate = Category::all();
         $customer = Customer::latest()->get();
-        return view('Layout.home',['pro'=>$pro,'cate'=>$cate,'customer'=>$customer]);
+        return view('Layout.home', ['pro' => $pro, 'cate' => $cate, 'customer' => $customer]);
     }
 
     public function create(Request $rq)
     {
-        try {
-            if (!$rq->hasFile('pic')) {
-                return response()->json(['error' => 'No image uploaded'], 400);
-            }
+        $rq->validate([
+            'name' => 'required',
+            'price' => 'required|numeric',
+            'category' => 'required|exists:categories,id',
+            'pic' => 'required|image|max:2048',
+        ]);
 
-            $image = $rq->file('pic');
-            if (!$image->isValid()) {
-                return response()->json(['error' => 'Invalid image uploaded'], 400);
-            }
+        $file = $rq->file('pic');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $mime = $file->getMimeType();
+        $content = file_get_contents($file);
 
-            $originalName = $image->getClientOriginalName();
-            $fileName = time() . '_' . $originalName;
+        // Upload to Supabase
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('SUPABASE_SERVICE_KEY'),
+            'apikey' => env('SUPABASE_SERVICE_KEY'),
+            'Content-Type' => $mime,
+        ])->put(env('SUPABASE_URL') . '/storage/v1/object/' . env('SUPABASE_BUCKET') . '/' . $fileName, $content);
 
-            $destination = storage_path('app/public/images');
-            if (!file_exists($destination)) {
-                mkdir($destination, 0775, true);
-            }
-
-            $image->move($destination, $fileName);
-
-            Product::create([
-                'pro_name' => $rq->name,
-                'pro_price' => $rq->price,
-                'cate_id' => $rq->category,
-                'pro_pic' => $fileName,
-            ]);
-
-            return redirect('/')->with('success', 'Product created successfully');
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Server Error: ' . $e->getMessage()
-            ], 500);
+        if (!$response->successful()) {
+            return response()->json(['error' => 'Image upload failed'], 500);
         }
+
+        $url = env('SUPABASE_URL') . '/storage/v1/object/public/' . env('SUPABASE_BUCKET') . '/' . $fileName;
+
+        // Save product to DB
+        Product::create([
+            'pro_name' => $rq->name,
+            'pro_price' => $rq->price,
+            'cate_id' => $rq->category,
+            'pro_pic' => $url,
+        ]);
+
+        return redirect()->back()->with('success', 'Product added');
     }
 
-    public function update(Request $rq){
+    public function update(Request $rq)
+    {
+        $rq->validate([
+            'id' => 'required|exists:products,id',
+            'name' => 'required',
+            'price' => 'required|numeric',
+            'category' => 'required|exists:categories,id',
+            'pic' => 'nullable|image|max:2048',
+        ]);
+
         $product = Product::find($rq->id);
-        $name = $rq->name;
-        $price = $rq->price;
-        $cate = $rq->category;
-        $fileName = null;
 
-        if($rq->hasFile('pic')){
-            $image = $rq->file('pic');
-            $originalName = $image->getClientOriginalName();
-            $fileName = time() . '_' . $originalName;
+        $product->pro_name  = $rq->name;
+        $product->pro_price = $rq->price;
+        $product->cate_id   = $rq->category;
 
-            $destination = storage_path('app/public/images');
-            if (!file_exists($destination)) {
-                mkdir($destination, 0775, true);
+        if ($rq->hasFile('pic')) {
+            $file = $rq->file('pic');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $mime = $file->getMimeType();
+            $content = file_get_contents($file);
+
+            // Upload new image to Supabase
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('SUPABASE_SERVICE_KEY'),
+                'apikey' => env('SUPABASE_SERVICE_KEY'),
+                'Content-Type' => $mime,
+            ])->put(env('SUPABASE_URL') . '/storage/v1/object/' . env('SUPABASE_BUCKET') . '/' . $fileName, $content);
+
+            if (!$response->successful()) {
+                return response()->json(['error' => 'Image upload failed'], 500);
             }
 
-            $image->move($destination, $fileName);
+            // Build the public URL to the uploaded image
+            $url = env('SUPABASE_URL') . '/storage/v1/object/public/' . env('SUPABASE_BUCKET') . '/' . $fileName;
+
+            $product->pro_pic = $url;
         }
 
-        $product->pro_name = $name;
-        $product->pro_price = $price;
-        $product->cate_id = $cate;
-        if($fileName != null){
-            $product->pro_pic = $fileName;
-        }
         $product->save();
 
-        return response("Successfully Updated");
+        return response('Successfully Updated');
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         $product = Product::find($id);
-
-        if ($product->pro_pic) {
-            $path = storage_path('app/public/images/' . $product->pro_pic);
-            if (File::exists($path)) {
-                File::delete($path);
-            }
-        }
-
         $product->delete();
-        return redirect("/table");
+
+        return redirect()->route('table');
     }
 }

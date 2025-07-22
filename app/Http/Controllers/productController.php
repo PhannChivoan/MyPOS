@@ -7,7 +7,6 @@ use App\Models\Customer;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Response;
 
 class productController extends Controller
 {   
@@ -16,6 +15,7 @@ class productController extends Controller
         $cate = Category::all();
         return view('Layout.table',['pro'=>$pro,'cate'=>$cate]);
     }
+
     public function index(){
         $pro = Product::with('category')->get();
         $cate = Category::all();
@@ -38,7 +38,7 @@ class productController extends Controller
             $originalName = $image->getClientOriginalName();
             $fileName = time() . '_' . $originalName;
 
-            $destination = '/mnt/data/images';
+            $destination = storage_path('app/public/images');
             if (!file_exists($destination)) {
                 mkdir($destination, 0775, true);
             }
@@ -72,7 +72,7 @@ class productController extends Controller
             $originalName = $image->getClientOriginalName();
             $fileName = time() . '_' . $originalName;
 
-            $destination = '/mnt/data/images';
+            $destination = storage_path('app/public/images');
             if (!file_exists($destination)) {
                 mkdir($destination, 0775, true);
             }
@@ -94,9 +94,8 @@ class productController extends Controller
     public function destroy($id){
         $product = Product::find($id);
 
-        // Optional: delete the image file
         if ($product->pro_pic) {
-            $path = '/mnt/data/images/' . $product->pro_pic;
+            $path = storage_path('app/public/images/' . $product->pro_pic);
             if (File::exists($path)) {
                 File::delete($path);
             }
@@ -105,6 +104,4 @@ class productController extends Controller
         $product->delete();
         return redirect("/table");
     }
-
-    // Optional helper route method for serving images (see below)
 }

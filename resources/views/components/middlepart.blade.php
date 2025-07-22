@@ -16,7 +16,8 @@
     @foreach($pro as $pros)
       <div class="col-6 col-sm-4 col-md-3 d-flex mt-2 product-item" data-category="{{ $pros->cate_id ?? '' }}">
         <div class="card card-style w-100 h-100"onclick="addToCart('{{ $pros->id }}', '{{ $pros->pro_name }}', {{ $pros->pro_price }})">
-          <img class="card-img-top" src="{{ url('uploads/' . $pros->pro_pic) }}" alt="Product Image" />
+          <img src="{{ asset('storage/images/' . $product->pro_pic) }}" class="card-img-top" alt="{{ $product->pro_name }}" />
+
                style="height:10rem; object-fit:cover">
           <div class="card-body text-center">
             <h5 class="card-title">{{ $pros->pro_name }}</h5>

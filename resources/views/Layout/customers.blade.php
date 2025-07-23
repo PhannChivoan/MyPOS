@@ -141,7 +141,7 @@
     <label>Status</label>
     </div>
     <div>
-    <select name="payment"  data-order-id="{{ $orders->id }}" class="form-control mx-2 payment-select">
+    <select name="payment"  data-order-id="{{ $deliverys->id }}" class="form-control mx-2 payment-select">
       <option value="unpaid">Unpaid</option>
       <option value="paid">paid</option>
     </select>

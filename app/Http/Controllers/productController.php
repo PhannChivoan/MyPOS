@@ -80,6 +80,6 @@ class productController extends Controller
     {
         $product = Product::find($id);
         $product->delete();
-        return redirect('table');
+        return response('Successfully Deleted');
     }
 }

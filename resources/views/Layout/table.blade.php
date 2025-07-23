@@ -51,7 +51,7 @@
         @foreach($pro as $pros)
         <tr>
             <td>{{ $pros->id }}</td>
-            <td><img class="card-img-top" src="{{ $product->pro_pic }}" style="width:5rem" alt="Product Image" /></td>
+            <td><img class="card-img-top" src="{{ $pros->pro_pic }}" style="width:5rem; height:5rem; object-fit: cover;" alt="Product Image" /></td>
             <td>{{ $pros->pro_name }}</td>
             <td>{{ $pros->pro_price }}</td>
             <td>{{ $pros->cate_id }}</td>

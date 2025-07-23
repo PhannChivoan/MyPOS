@@ -1,46 +1,60 @@
-html,body{
+html, body {
     background: rgb(221, 222, 223);
-    height:100%;
+    height: 100%;
     width: 100%;
-    overflow-x:hidden;
-}
-header{
-    display: flex;
-    justify-content: space-between;
-    margin:2px;
-    padding:5px;
-        
-    background-color: white;
-    box-shadow:0 .5rem 1rem rgba(0,0,0, .15);
+    overflow-x: hidden;
+    margin: 0; /* make sure no default margin */
+    padding: 0;
 }
 
-.logo-header{
+header {
     display: flex;
-    gap:20px;
+    justify-content: space-between;
+    align-items: center; /* vertically center content */
+  
+    padding: 10px 15px; /* increased padding for better height */
+    background-color: white;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+    position: relative; /* ensure normal flow */
+    z-index: 100; /* just in case */
+    height: 60px; /* fixed height for reference */
+    box-sizing: border-box;
 }
-.btn-search{
-    width:50%;
-    margin-left:-28%;
+
+.logo-header {
+    display: flex;
+    gap: 20px;
 }
-.button-logo{
+
+.btn-search {
+    width: 50%;
+    margin-left: -28%;
+}
+
+.button-logo {
     display: flex;
 }
-nav{
+
+nav {
     margin-top: -1px;
 }
-.nav-ul{
+
+.nav-ul {
     list-style-type: none;
     display: flex;
     flex-direction: column;
-    gap : 25px;
-    height: 100vh; 
+    gap: 25px;
+    height: 100vh;
     /* justify-content: space-evenly; */
+    padding-left: 0;
+    margin: 0;
 }
+
 .nav-ul li a {
-    display: block;          
-    color: black;             
-    text-decoration: none;   
-    border-radius: 4px;        
+    display: block;
+    color: black;
+    text-decoration: none;
+    border-radius: 4px;
     padding: 5px;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -52,27 +66,27 @@ nav{
 }
 
 .nav-ul li a:hover {
-    background-color: rgba(255, 106, 0, 0.9);  
+    background-color: rgba(255, 106, 0, 0.9);
     color: white;
 }
 
-
-a{
+a {
     text-decoration: none;
-    color:black;
+    color: black;
     /* box-shadow:0 .5rem 1rem rgba(0,0,0, .15); */
 }
 
 /* item hover */
-.menu-container{
+.menu-container {
     background: rgb(249, 252, 255);
 }
+
 .item-hover {
     display: block;
     padding: 0px 20px;
     height: 100%;
-    min-height: 35px;           
-    line-height: 35px;            
+    min-height: 35px;
+    line-height: 35px;
     color: black;
     border-radius: 4px;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -86,15 +100,14 @@ a{
 }
 
 .item-hover:hover {
-    background-color: rgba(255, 106, 0, 0.9);  
+    background-color: rgba(255, 106, 0, 0.9);
     color: white;
 }
 
-
-
-.box-icon{
+.box-icon {
     width: 100%;
 }
+
 /* Card */
 .card-style {
     /* width: 12rem; */
@@ -123,22 +136,55 @@ a{
     text-align: center;
 }
 
-.card:hover{
-    box-shadow:0 .5rem 1rem rgba(0, 12, 238, 0.15);
+.card:hover {
+    box-shadow: 0 .5rem 1rem rgba(0, 12, 238, 0.15);
 }
-.cashier-total{
-    background:rgb(237, 235, 235);
+
+.cashier-total {
+    background: rgb(237, 235, 235);
     margin: 10px -8px;
     height: 250px;
-    padding:10px;
+    padding: 10px;
 }
- 
+
 /* cart section */
-.cart{
-    background:rgb(218, 218, 219);
+.cart {
+    background: rgb(218, 218, 219);
     margin: 5px 0;
-    padding:3px;
+    padding: 3px;
+}
+
+/* NEW: Push main content down below header */
+.main-container {
+    padding-top: 5px; /* equal to header height */
+    box-sizing: border-box;
 }
 
 
+.custom-hide-ipad {
+  display: inline !important; /* show by default */
+}
+
+@media (max-width: 991.98px) {
+  #sidebar-nav {
+    position: fixed !important;  /* force fixed positioning */
+    top: 0 !important;
+    left: 0 !important;
+    width: 110px !important;     /* override Bootstrap width */
+    height: 100vh !important;
+    background-color: white !important;
+    z-index: 9999 !important;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2) !important;
+    transform: translateX(-100%) !important;
+    transition: transform 0.3s ease !important;
+    padding: 0 !important;       /* remove any padding */
+    margin: 0 !important;        /* remove any margin */
+    overflow-x: hidden !important;
+    display: block !important;   /* override d-none */
+  }
+
+  #sidebar-nav.active {
+    transform: translateX(0) !important;
+  }
+}
 

@@ -17,6 +17,9 @@
 </head>
 <body >
     <header class="d-flex align-items-center gap-3" style="padding: 10px;">
+      <button id="menu-toggle" class="btn btn-outline-primary d-xl-none" type="button" aria-label="Toggle Menu">
+  <i class="fas fa-bars"></i>
+</button>
   <div class="logo-header">
     <h1>Pos System</h1>
   </div>
@@ -45,7 +48,7 @@
     <div class="main-container" >
     <div class="row h-100 min-vh-100"> 
 
-  <div class="col-auto col-md-1 d-none d-xl-block">
+  <div class="col-auto col-md-1 d-none d-lg-block " id="sidebar-nav">
     <nav class=" d-flex">
         <div class="d-flex">
         <div class="shadow bg-light">
@@ -54,7 +57,7 @@
               <li>
                 <div>
                 <a href="/"  class="{{ Request::is('/') ? 'active' : '' }}"><i class="fa-solid fa-house box-icon"></i>
-                <span class="d-none d-lg-inline">Home</span>
+                <span class="d-none d-lg-inline d-sm-none custom-hide-ipad">Home</span>
                 </a>
               </div>
               </li>
@@ -62,7 +65,7 @@
               <li>
               <div>
               <a href="/customers" class="{{ Request::is('customers') ? 'active' : '' }}"><i class="fa-solid fa-user"></i>
-              <span class="d-none d-lg-inline">Customers</span>
+              <span class="d-none d-lg-inline custom-hide-ipad">Customers</span>
               </a>
               </div>
             </li>
@@ -70,7 +73,7 @@
             <li>
               <div>
               <a href="/table" class="{{ Request::is('table') ? 'active' : '' }}"><i class="fa-solid fa-table"></i>
-              <span class="d-none d-lg-inline"><br>Tables</span>
+              <span class="d-none d-lg-inline custom-hide-ipad"><br>Tables</span>
               </a>
             </div>
             </li>
@@ -78,7 +81,7 @@
             <li>
               <div>
                 <a href="/cashiers" class="{{ Request::is('cashiers') ? 'active' : '' }}  text-muted nav-link disabled"><i class="fa-solid fa-dollar-sign"></i>
-              <span class="d-none d-lg-inline"><br>Cashiers</span>
+              <span class="d-none d-lg-inline custom-hide-ipad"><br>Cashiers</span>
               </a>
               </div>
             </li>
@@ -86,7 +89,7 @@
             <li>
               <div>
               <a href="/orders" class="{{ Request::is('orders') ? 'active' : '' }}  text-muted nav-link disabled"><i class="fa-solid fa-bag-shopping"></i>
-              <span class="d-none d-lg-inline"><br>Orders</span>
+              <span class="d-none d-lg-inline custom-hide-ipad"><br>Orders</span>
               </a>
             </div>
             </li>
@@ -94,7 +97,7 @@
             <li>
               <div>
                 <a href="/reports " class="{{ Request::is('reports') ? 'active' : '' }}"><i class="fa-solid fa-circle-exclamation"></i>
-              <span class="d-none d-lg-inline"><br>Reports</span>
+              <span class="d-none d-lg-inline custom-hide-ipad"><br>Reports</span>
               </a></div>
             </li>
             
@@ -102,7 +105,7 @@
               <div>
               <a href="/setting" class="{{ Request::is('settings') ? 'active' : '' }}  text-muted nav-link disabled">
                 <i class="fa-solid fa-gear"></i>
-              <span class="d-none d-lg-inline "><br>Setting</span>
+              <span class="d-none d-lg-inline custom-hide-ipad "><br>Setting</span>
               </a>
             </div>
             </li>

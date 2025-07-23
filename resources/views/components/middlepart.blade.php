@@ -1,16 +1,12 @@
 <div class="container">
-  <div class="row justify-content-center my-3">
-    <div class="col-12">
-      <div class="menu-container  shadow rounded-2 p-2  w-100">
-        <div class="d-flex justify-content-center gap-4 ">
-          <div class="item-hover active" data-filter="all">All</div>
-        @foreach($cate as $cates)
-        <div class="item-hover" data-filter="{{ $cates->id }}">{{$cates->name}}</div>
-        @endforeach
-        </div>
-      </div>
-    </div>
+<div class="menu-container mt-2 shadow rounded-2 p-2 w-100">
+  <div class="d-flex justify-content-center gap-4 flex-wrap flex-sm-nowrap overflow-auto">
+    <div class="item-hover active" data-filter="all">All</div>
+    @foreach($cate as $cates)
+    <div class="item-hover" data-filter="{{ $cates->id }}">{{$cates->name}}</div>
+    @endforeach
   </div>
+</div>
 
   <div class="row justify-content-center gx-3 " id="menu">
     @foreach($pro as $pros)

@@ -13,4 +13,24 @@ document.addEventListener('DOMContentLoaded', () => {
 // cart.innerHTML += '<div class="cart">1 Nom Banh Juk 0.75c <i class="fa-solid fa-xmark px-5" ></i></div>';
 // }
 
+$(document).ready(function() {
+  $('#menu-toggle').on('click', function(e) {
+    e.stopPropagation(); // Prevent this click from bubbling up to document
+    $('#sidebar-nav').toggleClass('active');
+  });
 
+  // Clicking anywhere else closes sidebar
+  $(document).on('click touchstart', function(e) {
+    const sidebar = $('#sidebar-nav');
+    const toggleBtn = $('#menu-toggle');
+    
+    // If sidebar is open and click is outside sidebar and toggle button, close sidebar
+    if (sidebar.hasClass('active') && 
+        !sidebar.is(e.target) && 
+        sidebar.has(e.target).length === 0 &&
+        !toggleBtn.is(e.target) &&
+        toggleBtn.has(e.target).length === 0) {
+      sidebar.removeClass('active');
+    }
+  });
+});

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 html, body {
     background: rgb(221, 222, 223);
     height: 100%;
@@ -5,6 +6,7 @@ html, body {
     overflow-x: hidden;
     margin: 0; /* make sure no default margin */
     padding: 0;
+    font-family: '';
 }
 
 header {

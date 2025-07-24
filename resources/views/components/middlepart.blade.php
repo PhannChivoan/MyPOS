@@ -1,7 +1,7 @@
 <div class="container">
 <div class="menu-container mt-2 shadow rounded-2 p-2 w-100">
   <div class="overflow-auto">
-    <div class="d-flex justify-content-start flex-nowrap gap-3" style="min-width: max-content;">
+    <div class="d-flex justify-content-center flex-nowrap gap-3" style="min-width: max-content;">
       <div class="item-hover active text-nowrap" data-filter="all">All</div>
       @foreach($cate as $cates)
         <div class="item-hover text-nowrap" data-filter="{{ $cates->id }}">{{ $cates->name }}</div>

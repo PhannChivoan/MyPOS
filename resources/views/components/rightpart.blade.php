@@ -3,33 +3,42 @@
 
     <!-- White cart panel with scroll -->
     <div class="bg-light shadow rounded-2 flex-grow-1 d-flex flex-column">
-        <div class="p-2">
-            <div class="d-flex justify-content-between">
-                <div>
-                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#customerModalCreate">+ Add Customer</button>
-                </div>
-                <div class=" flex-grow-1 px-1">
-                <select class="form-control" id="customerSelect">
-                        @foreach($customer as $customers)
-                        <option value="{{$customers->id}}" >{{ $customers->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div>
-                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">+</button>
-                    
-                    <button class="btn btn-secondary"><i class="fa-solid fa-money-bill"></i></button>
-                    <button class="btn btn-secondary" onClick="clearCart()"><i class="fa-solid fa-rotate-right"></i></button>
-                </div>
-            </div>
-            <hr class="my-2">
+    <div class="p-2">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+
+        <!-- + Add Customer -->
+        <div>
+            <button class="btn btn-secondary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#customerModalCreate">
+            <span class="d-none d-sm-inline ms-1">+ Add </span> &nbsp;Customer
+            </button>
         </div>
 
-        <!-- Scrollable cart content -->
-        <div id="cart-area" class="px-2 overflow-y-auto" style="max-height: 300px;flex-grow: 1;">
-            <div id="cart"></div>
+        <!-- Customer <select> -->
+        <div class="flex-grow-1 px-1">
+            <select class="form-control" id="customerSelect">
+            @foreach($customer as $customers)
+                <option value="{{$customers->id}}">{{ $customers->name }}</option>
+            @endforeach
+            </select>
         </div>
+
+        <!-- Action buttons -->
+        <div class="d-flex gap-2">
+            <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">+</button>
+            <button class="btn btn-secondary"><i class="fa-solid fa-money-bill"></i></button>
+            <button class="btn btn-secondary" onClick="clearCart()"><i class="fa-solid fa-rotate-right"></i></button>
+        </div>
+
+        </div>
+        <hr class="my-2">
     </div>
+
+    <!-- Scrollable cart content -->
+    <div id="cart-area" class="px-2 overflow-y-auto" style="max-height: 300px; flex-grow: 1;">
+        <div id="cart"></div>
+    </div>
+    </div>
+
 
     <!-- Sticky Total Section OUTSIDE white cart area -->
     <div class="bg-white shadow  p-3">

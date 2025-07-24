@@ -29,7 +29,7 @@
     </ul>
 
     <!-- menu form added -->
-    <div class="mt-3 d-none" id="menu-form-container" style="width: 100%;"> <!-- full width block div -->
+    <div class="mt-3 d-none" id="menu-form-container-{{ $orders->id }}" style="width: 100%;"> <!-- full width block div -->
 
         @csrf
         <input type="hidden" name="customer_id" value="{{ $orders->customer->id }}">
@@ -63,14 +63,14 @@
             </div>
         </div>
 
-        <button type="button" class="btn btn-secondary my-2" id="add-item">Add Another Menu</button>
+        <button type="button" class="btn btn-secondary my-2 add-item" data-order-id="{{ $orders->id }}">Add Another Menu</button>
         <button type="submit" class="btn btn-success">Add All Menus</button>
     </div>
 
   </div>
   <!-- end of menu form added -->
   <x-slot name="footer">
-    <button type="button" id="add-order" onClick="showneworder()" class="btn btn-secondary me-2">Add Menu</button>
+    <button type="button" id="add-order"  onClick="showneworder({{ $orders->id }})" class="btn btn-secondary me-2">Add Menu</button>
     <button class="btn btn-primary" type="button"
       onclick="markPaidAndPrint({{ $orders->id }}, 'receipt-{{ $orders->id }}')">Cash out</button>
   </x-slot>

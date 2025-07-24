@@ -1,15 +1,15 @@
 <x-layout>
-  <x-slot name="header">
-    Home Page
-  </x-slot>
-    <div class="col-12 col-md-7 overflow-auto" style="height: 100vh;">
-      @include('components.middlepart')
-    </div>
-    
-    <div class="col-12 col-md-4" style="height: 70vh;">
+  <x-slot name="header">Home Page</x-slot>
+
+  <div class="col-12 col-md-7 overflow-auto" style="height: 100vh;">
+    @include('components.middlepart')
+  </div>
+
+  <div class="col-12 col-md-5" style="height: 70vh;">
     @include('components.rightpart')
-    </div>
+  </div>
 </x-layout>
+
 
 <x-modal id="exampleModal" action="/productCreate" method="post" enctype="multipart/form-data">
       <div class="col-5 px-2 d-flex flex-column justify-content-between">

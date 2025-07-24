@@ -97,11 +97,12 @@ function markPaidAndPrint(orderId, receiptId) {
 
 // ------------------------- Added another menu to existing customer
 document.addEventListener("DOMContentLoaded", () => {
-  // Find all menu groups (one per modal)
-  const menuGroups = document.querySelectorAll('.menu-group');
+  const allMenuContainers = document.querySelectorAll('[id^="menu-form-container-"]');
 
-  menuGroups.forEach(menuGroup => {
-    const addButton = menuGroup.parentElement.querySelector('#add-item');
+  allMenuContainers.forEach(menuContainer => {
+    const orderId = menuContainer.id.replace('menu-form-container-', '');
+    const menuGroup = menuContainer.querySelector('.menu-group');
+    const addButton = menuContainer.querySelector('.add-item');
 
     // Function to update price input from selected option's data-price
     function updatePrice(selectElem) {
@@ -113,19 +114,19 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // Event delegation for dynamically added selects
-    menuGroup.addEventListener('change', function (e) {
-      if (e.target && e.target.matches('select[name="product_id[]"]')) {
-        updatePrice(e.target);
-      }
-    });
-
     // Initialize existing selects
     menuGroup.querySelectorAll('select[name="product_id[]"]').forEach(select => {
       updatePrice(select);
     });
 
-    // Handle add new menu item
+    // Change event delegation for selects
+    menuGroup.addEventListener('change', e => {
+      if (e.target && e.target.matches('select[name="product_id[]"]')) {
+        updatePrice(e.target);
+      }
+    });
+
+    // Add menu item
     if (addButton) {
       addButton.addEventListener('click', () => {
         const firstItem = menuGroup.querySelector('.menu-item');
@@ -144,16 +145,12 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
 
-        // Append new item
         menuGroup.appendChild(newItem);
-
-        // Update price for newly added item
-        const newSelect = newItem.querySelector('select[name="product_id[]"]');
-        updatePrice(newSelect);
+        updatePrice(newItem.querySelector('select[name="product_id[]"]'));
       });
     }
 
-    // Remove menu item (keep at least one)
+    // Remove menu item
     menuGroup.addEventListener('click', e => {
       if (e.target.classList.contains('remove-item')) {
         const items = menuGroup.querySelectorAll('.menu-item');
@@ -167,13 +164,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-
-// ---------------- add menu
-function showneworder(){
-const formDiv = document.getElementById('menu-form-container');
-    if (formDiv.classList.contains('d-none')) {
-      formDiv.classList.remove('d-none');
-    } else {
-      formDiv.classList.add('d-none'); // optional: toggle off if clicked again
-    }
+// Show/hide menu form for the correct modal
+function showneworder(orderId) {
+  const formDiv = document.getElementById('menu-form-container-' + orderId);
+  if (formDiv) {
+    formDiv.classList.toggle('d-none');
+  }
 }

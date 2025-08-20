@@ -130,7 +130,7 @@ $(function(){
             name : name
         },function(data,status){
             alert("Category Updated Successfully!");
-            window.location.href = "/table";
+            window.location.href = "/products";
         });
     });
     $('#DeleteCategory').click(function(){
@@ -139,7 +139,7 @@ $(function(){
         $.post("/categoryDelete/"+id,
         function(data,status){
             alert("Category Deleted Successfully!");
-            window.location.href = "/table";
+            window.location.href = "/products";
         });
     });
 

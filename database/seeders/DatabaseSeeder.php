@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         Cashier::create([
             'name' => 'Chivoan',
             'email' => 'voan@gmail.com',
-            'password' => bcrypt('voan123'),
+            'password' => 'voan123',
             'role' => 'Admin',
         ]);
     }

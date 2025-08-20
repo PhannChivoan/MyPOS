@@ -17,7 +17,7 @@ class categoryController extends Controller
         }
         $name = $rq->category;
         Category::create(['name'=>$name]);
-        return redirect('/table');
+        return redirect('/products');
     }
     public function update(Request $rq){
         $cateId = Category::find($rq->id);

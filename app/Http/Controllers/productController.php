@@ -34,7 +34,7 @@ class productController extends Controller
         $validator = Validator::make($request->all(),[
             'name'=>'required|min:3',
             'price'=>'required|numeric',
-            'pic'=>'required|image|mimes:jpeg,jpg,png,gif|max:2048',
+            'pic' => 'required|image|mimes:jpeg,jpg,png,gif,webp|max:2048',
         ]);
         if($validator->fails()){
             return back()->withErrors($validator)->withInput()->with('modal','exampleModal');

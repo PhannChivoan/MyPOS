@@ -7,7 +7,7 @@
     <div class="row gx-3">
 
       <!-- Category Column -->
-      <div class="col-12 col-md-4 col-lg-3 mt-1">
+      <div class="col-12 col-md-4 col-lg-3 mt-1 order-md-2">
         <div class="card w-100 shadow rounded-3">
           <div class="card-body p-2" style="overflow-x: auto;"> 
             <div class="d-flex flex-row justify-content-between">
@@ -41,7 +41,7 @@
       </div>
 
       <!-- Product Column -->
-      <div class="col-12 col-md-8 col-lg-9 mt-1">
+      <div class="col-12 col-md-8 col-lg-9 mt-1 order-md-1">
         <div class="card w-100 shadow rounded-3">
           <div class="card-body p-2"> 
             <h5 class="card-title fw-semibold">Products</h5>
@@ -87,6 +87,9 @@
 
 <!-- Product Modal -->
 <x-modal id="updateProduct">
+  <x-slot name="header">
+    <h1 class="modal-title fs-5" id="exampleModalLabel">Update Product's Details</h1>
+  </x-slot>
   <div class="col-5 px-2 d-flex flex-column justify-content-between">
     <input type="hidden" id="update_id" />
     <label>Image</label>
@@ -116,9 +119,15 @@
 
 <!-- Category Create Modal -->
 <x-modal id="categoryModal" method="post" action="/categoryCreate">
+  <x-slot name="header">
+    <h1 class="modal-title fs-5" id="exampleModalLabel">Create Category</h1>
+  </x-slot>
   <div class="mb-3 col-12">
     <label for="category" class="form-label">Category</label>
     <input type="text" class="form-control" id="category" name="category" />
+    @error('category')
+    <div class="text-danger">{{ $message }}</div>
+    @enderror
   </div>
 
   <x-slot name="footer">
@@ -129,6 +138,9 @@
 
 <!-- Category Update Modal -->
 <x-modal id="categoryModalUpdate">
+  <x-slot name="header">
+    <h1 class="modal-title fs-5" id="exampleModalLabel">Update Category</h1>
+  </x-slot>
   <div class="mb-3 col-12">
     <label for="category" class="form-label">Category</label>
     <input type="text" class="form-control" id="cateName" name="category" />

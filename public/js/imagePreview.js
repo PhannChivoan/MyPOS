@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 $(document).ready(function() {
   $('#menu-toggle').on('click', function(e) {
-    e.stopPropagation(); // Prevent this click from bubbling up to document
+    e.stopPropagation();
     $('#sidebar-nav').toggleClass('active');
   });
 
@@ -24,7 +24,7 @@ $(document).ready(function() {
     const sidebar = $('#sidebar-nav');
     const toggleBtn = $('#menu-toggle');
     
-    // If sidebar is open and click is outside sidebar and toggle button, close sidebar
+
     if (sidebar.hasClass('active') && 
         !sidebar.is(e.target) && 
         sidebar.has(e.target).length === 0 &&

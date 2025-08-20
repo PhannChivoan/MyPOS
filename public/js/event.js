@@ -1,173 +1,148 @@
 document.addEventListener("DOMContentLoaded", function () {
-  var x = document.getElementById("order");
-  var z = document.getElementById("add");
-  var y = document.getElementById("phone");
+  // ----------------- Order Type Toggle -----------------
+  const orderSelect = document.getElementById("order");
+  const addBtn = document.getElementById("add");
+  const phoneInput = document.getElementById("phone");
 
-  x.addEventListener("change", function () {
-    if (x.value === "delivery") {
-      z.removeAttribute("disabled");
-      y.removeAttribute("disabled");
-    } else {
-      z.setAttribute("disabled", "disabled"); 
-      y.setAttribute("disabled", "disabled"); 
-    }
-  });
-});
-// --------------- CATEGORY
-document.addEventListener('DOMContentLoaded', () => {
+  if(orderSelect) {
+    orderSelect.addEventListener("change", function () {
+      if (orderSelect.value === "delivery") {
+        addBtn?.removeAttribute("disabled");
+        phoneInput?.removeAttribute("disabled");
+      } else {
+        addBtn?.setAttribute("disabled", "disabled");
+        phoneInput?.setAttribute("disabled", "disabled");
+      }
+    });
+  }
+
+  // ----------------- Category Filtering -----------------
   document.querySelectorAll('.item-hover').forEach(btn => {
     btn.addEventListener('click', function () {
       document.querySelectorAll('.item-hover').forEach(b => b.classList.remove('active'));
       this.classList.add('active');
 
       const filter = this.getAttribute('data-filter');
-
       document.querySelectorAll('.product-item').forEach(item => {
         const category = item.getAttribute('data-category');
-        if (filter === 'all' || category?.toString() === filter.toString()) {
-          item.style.setProperty('display', '', 'important');  // show
+        if (filter === 'all' || category === filter) {
+          item.style.setProperty('display', '', 'important');
         } else {
-          item.style.setProperty('display', 'none', 'important'); // hide
+          item.style.setProperty('display', 'none', 'important');
         }
       });
     });
   });
-});
 
-
-//----------- Search Box
-
-document.addEventListener('DOMContentLoaded', () => {
-  const search = document.getElementById('search');
-
-  function filterItems(containerId, itemSelector, filtertext) {
+  // ----------------- Search Filtering -----------------
+  const searchInput = document.getElementById('search');
+  function filterItems(containerId, itemSelector, filterText) {
     const container = document.getElementById(containerId);
-    if (!container) {
-      console.error(`No container found with id "${containerId}"`);
-      return;
-    }
-    const items = container.querySelectorAll(itemSelector);
-
-    items.forEach(item => {
+    if (!container) return;
+    container.querySelectorAll(itemSelector).forEach(item => {
       const text = item.textContent.toLowerCase();
-      if (text.includes(filtertext)) {
-        item.style.setProperty('display', '', 'important');
-      } else {
-        item.style.setProperty('display', 'none', 'important');
-      }
+      item.style.setProperty('display', text.includes(filterText) ? '' : 'none', 'important');
+    });
+  }
+  if(searchInput){
+    searchInput.addEventListener('input', function () {
+      const filter = this.value.toLowerCase();
+      filterItems('table', 'tbody tr', filter);
+      filterItems('menu', '.product-item', filter);
     });
   }
 
-  if (!search) {
-    console.error('No element with id "search" found');
-    return;
+  // ----------------- Show/Hide Menu Form -----------------
+  window.showneworder = function(orderId) {
+    const formDiv = document.getElementById('menu-form-container-' + orderId);
+    formDiv?.classList.toggle('d-none');
   }
 
-  search.addEventListener('input', function () {
-    const filter = this.value.toLowerCase();
-    filterItems('table', 'tbody tr', filter);
-    filterItems('menu', '.product-item', filter);
-  });
-});
+  // ----------------- Add / Remove Menu Items -----------------
+  document.addEventListener('click', function(e){
+    // Add new menu item
+    if(e.target.matches('.add-item')){
+      const menuGroup = e.target.closest('.modal-content')?.querySelector('.menu-group');
+      if(!menuGroup) return;
 
-// ------------------Printing recciept and change status to paid
+      const firstItem = menuGroup.querySelector('.menu-item');
+      const newItem = firstItem.cloneNode(true);
 
-function markPaidAndPrint(orderId, receiptId) {
-  const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    fetch('/orders/'+ orderId +'/paid', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': token
-        },
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            let printContents = document.getElementById(receiptId).innerHTML;
-            let originalContents = document.body.innerHTML;
-
-            document.body.innerHTML = printContents;
-            window.print();
-            document.body.innerHTML = originalContents;
-            location.reload();
-        }
-    });
-}
-
-// ------------------------- Added another menu to existing customer
-document.addEventListener("DOMContentLoaded", () => {
-  const allMenuContainers = document.querySelectorAll('[id^="menu-form-container-"]');
-
-  allMenuContainers.forEach(menuContainer => {
-    const orderId = menuContainer.id.replace('menu-form-container-', '');
-    const menuGroup = menuContainer.querySelector('.menu-group');
-    const addButton = menuContainer.querySelector('.add-item');
-
-    // Function to update price input from selected option's data-price
-    function updatePrice(selectElem) {
-      const selectedOption = selectElem.options[selectElem.selectedIndex];
-      const price = selectedOption.getAttribute('data-price') || "0";
-      const priceInput = selectElem.closest('.menu-item').querySelector('input[name="price[]"]');
-      if (priceInput) {
-        priceInput.value = price;
-      }
-    }
-
-    // Initialize existing selects
-    menuGroup.querySelectorAll('select[name="product_id[]"]').forEach(select => {
-      updatePrice(select);
-    });
-
-    // Change event delegation for selects
-    menuGroup.addEventListener('change', e => {
-      if (e.target && e.target.matches('select[name="product_id[]"]')) {
-        updatePrice(e.target);
-      }
-    });
-
-    // Add menu item
-    if (addButton) {
-      addButton.addEventListener('click', () => {
-        const firstItem = menuGroup.querySelector('.menu-item');
-        if (!firstItem) return;
-
-        const newItem = firstItem.cloneNode(true);
-
-        // Reset inputs
-        newItem.querySelectorAll('input, select').forEach(input => {
-          if (input.name.includes('quantity')) {
-            input.value = 1;
-          } else if (input.name.includes('price')) {
-            input.value = 0;
-          } else if (input.tagName.toLowerCase() === 'select') {
-            input.selectedIndex = 0;
-          }
-        });
-
-        menuGroup.appendChild(newItem);
-        updatePrice(newItem.querySelector('select[name="product_id[]"]'));
+      newItem.querySelectorAll('input, select').forEach(input => {
+        if(input.name.includes('quantity')) input.value = 1;
+        else if(input.name.includes('price')) input.value = 0;
+        else if(input.tagName.toLowerCase() === 'select') input.selectedIndex = 0;
       });
+
+      // Update price for the new item
+      const selectElem = newItem.querySelector('select[name="product_id[]"]');
+      if(selectElem){
+        const price = selectElem.selectedOptions[0]?.dataset.price || 0;
+        newItem.querySelector('input[name="price[]"]').value = price;
+      }
+
+      menuGroup.appendChild(newItem);
     }
 
     // Remove menu item
-    menuGroup.addEventListener('click', e => {
-      if (e.target.classList.contains('remove-item')) {
-        const items = menuGroup.querySelectorAll('.menu-item');
-        if (items.length > 1) {
-          e.target.closest('.menu-item').remove();
-        } else {
-          alert('You must have at least one menu item.');
+    if(e.target.classList.contains('remove-item')){
+      const menuGroup = e.target.closest('.menu-group');
+      const items = menuGroup.querySelectorAll('.menu-item');
+      if(items.length > 1) e.target.closest('.menu-item').remove();
+      else alert('At least one menu item is required.');
+    }
+  });
+
+  // ----------------- Update price on select change -----------------
+  document.addEventListener('change', function(e){
+    if(e.target.matches('select[name="product_id[]"]')){
+      const selectedOption = e.target.options[e.target.selectedIndex];
+      const price = selectedOption?.dataset?.price || 0;
+      const priceInput = e.target.closest('.menu-item').querySelector('input[name="price[]"]');
+      if(priceInput) priceInput.value = price;
+    }
+  });
+
+  // ----------------- Mark Paid & Print Receipt -----------------
+  window.markPaidAndPrint = function(orderId, receiptId){
+    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    if(!token) return;
+
+    const numericId = parseInt(orderId.toString().replace(/^(delivery-|takeaway-)/, '')) || orderId;
+
+    fetch('/orders/' + numericId + '/paid', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': token
+      },
+    })
+    .then(res => res.json())
+    .then(data => {
+      if(data.success){
+        const printContents = document.getElementById(receiptId)?.innerHTML;
+        if(printContents){
+          const originalContents = document.body.innerHTML;
+          document.body.innerHTML = printContents;
+          window.print();
+           location.reload();
+          document.body.innerHTML = originalContents;
+
+ 
+          const statusEl = document.querySelector(`[data-order-id='${orderId}']`);
+          if(statusEl) statusEl.textContent = 'paid';
         }
       }
-    });
-  });
-});
-
-// Show/hide menu form for the correct modal
-function showneworder(orderId) {
-  const formDiv = document.getElementById('menu-form-container-' + orderId);
-  if (formDiv) {
-    formDiv.classList.toggle('d-none');
+    })
+    .catch(err => console.error(err));
   }
-}
+
+  // ----------------- Toggle Select / Delivery -----------------
+  function toggleSelect() {
+    const isChecked = document.getElementById('checkDelivery')?.checked;
+    document.getElementById('tableBox')?.style.setProperty('display', isChecked ? 'none' : 'block');
+    document.getElementById('customerBox')?.style.setProperty('display', isChecked ? 'block' : 'none');
+  }
+  toggleSelect(); 
+  document.getElementById('checkDelivery')?.addEventListener('change', toggleSelect);
+});

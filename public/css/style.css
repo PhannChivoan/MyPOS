@@ -4,22 +4,23 @@ html, body {
     height: 100%;
     width: 100%;
     overflow-x: hidden;
-    margin: 0; /* make sure no default margin */
+    overflow-y: auto;
+    margin: 0; 
     padding: 0;
     font-family: '';
 }
 
 header {
+    position: sticky;
     display: flex;
     justify-content: space-between;
-    align-items: center; /* vertically center content */
-  
-    padding: 10px 15px; /* increased padding for better height */
+    align-items: center; 
+    padding: 10px 15px; 
     background-color: white;
     box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
-    position: relative; /* ensure normal flow */
-    z-index: 100; /* just in case */
-    height: 60px; /* fixed height for reference */
+    top: 0;
+    z-index: 100; 
+    height: 60px; 
     box-sizing: border-box;
 }
 
@@ -124,8 +125,8 @@ a {
 .card-img-top {
     height: 8rem;
     width: 100%;
-    object-fit: cover; /* Crop image to fill area without distortion */
-    border-top-left-radius: 0.375rem; /* match Bootstrap .card rounding */
+    object-fit: cover;
+    border-top-left-radius: 0.375rem; 
     border-top-right-radius: 0.375rem;
 }
 
@@ -162,27 +163,70 @@ a {
     box-sizing: border-box;
 }
 
+/* Progress bar */
+    .progress-ring {
+      width: 80px;
+      height: 80px;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .progress-ring circle {
+      fill: transparent;
+      stroke-width: 8;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+
+    .progress-ring__background {
+      stroke: #e9ecef;
+    }
+
+    .progress-ring__progress {
+      stroke: #0d6efd;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.35s;
+    }
+
+    .progress-ring-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #0d6efd;
+    }
+ #verticalBarChart {
+    height: 250px !important; 
+    width: 100% !important;    
+  }
+
+  .form-check-input{
+    transform: scale(1.5); 
+    margin-right: 0.5rem;
+    cursor: pointer;
+  }
 
 .custom-hide-ipad {
-  display: inline !important; /* show by default */
+  display: inline !important;
 }
-
 @media (max-width: 991.98px) {
   #sidebar-nav {
-    position: fixed !important;  /* force fixed positioning */
+    position: fixed !important; 
     top: 0 !important;
     left: 0 !important;
-    width: 110px !important;     /* override Bootstrap width */
+    width: 110px !important;    
     height: 100vh !important;
     background-color: white !important;
     z-index: 9999 !important;
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2) !important;
     transform: translateX(-100%) !important;
     transition: transform 0.3s ease !important;
-    padding: 0 !important;       /* remove any padding */
-    margin: 0 !important;        /* remove any margin */
+    padding: 0 !important;     
+    margin: 0 !important;        
     overflow-x: hidden !important;
-    display: block !important;   /* override d-none */
+    display: block !important; 
   }
 
   #sidebar-nav.active {

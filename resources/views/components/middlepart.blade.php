@@ -14,7 +14,7 @@
 
 <div class="row justify-content-center gx-3" id="menu">
   @foreach($pro as $pros)
-    <div class="col-6 col-sm-6 col-md-6 col-lg-3 d-flex mt-2 product-item" data-category="{{ $pros->cate_id ?? '' }}">
+    <div class="col-6 col-sm-6 col-md-6 col-lg-3 d-flex mt-4 product-item" data-category="{{ $pros->cate_id ?? '' }}">
       <div class="card card-style w-100 h-100" onclick="addToCart('{{ $pros->id }}', '{{ $pros->pro_name }}', {{ $pros->pro_price }})">
         <img src="{{ $pros->pro_pic }}" class="card-img-top" alt="{{ $pros->pro_name }}" style="height:10rem; object-fit:cover" />
         <div class="card-body text-center">

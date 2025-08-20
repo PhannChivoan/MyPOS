@@ -17,6 +17,9 @@
 
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/27dad13733.js" crossorigin="anonymous"></script>
+    <!-- Chart -->
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body style="background: rgb(221, 222, 223);">
 
@@ -35,7 +38,7 @@
         </div>
 
         <div class="button-logo">
-            <button class="btn btn-warning">Account</button>
+            <button class="btn btn-warning">{{session()->get('username')}}</button>
         </div>
     </header>
 
@@ -48,45 +51,57 @@
                 <nav class="shadow bg-light h-100">
                     <ul class="nav-ul d-flex flex-column p-3 text-center">
                         <li>
-                            <a href="/" class="{{ Request::is('/') ? 'active' : '' }}">
+                            <a href="/" class="d-flex flex-column align-items-center {{ Request::is('/') ? 'active' : '' }}">
                                 <i class="fa-solid fa-house box-icon"></i>
                                 <span class="d-none d-lg-inline custom-hide-ipad">Home</span>
                             </a>
                         </li>
                         <li>
-                            <a href="/customers" class="d-flex flex-column align-items-center {{ Request::is('customers') ? 'active' : '' }}">
-                                <i class="fa-solid fa-user"></i>
-                                <span class="d-none d-lg-inline custom-hide-ipad">Customers</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/table" class="d-flex flex-column align-items-center {{ Request::is('table') ? 'active' : '' }}">
-                                <i class="fa-solid fa-table"></i>
+                            <a href="/tables" class="d-flex flex-column align-items-center {{ Request::is('tables') ? 'active' : '' }}">
+                                <i class="fa-solid fa-table box-icon"></i>
                                 <span class="d-none d-lg-inline custom-hide-ipad">Tables</span>
+                                
                             </a>
                         </li>
                         <li>
-                            <a href="/cashiers" class="d-flex flex-column align-items-center text-muted nav-link disabled">
+                            <a href="/products" class="d-flex flex-column align-items-center {{ Request::is('products') ? 'active' : '' }}">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <span class="d-none d-lg-inline custom-hide-ipad">Products</span>
+                            </a>
+                        </li>
+                
+                        @if(session('role')==='Admin')
+                        <li>
+                            <a href="/cashiers" class="d-flex flex-column align-items-center  nav-link {{ Request::is('cashiers') ? 'active' : '' }}">
                                 <i class="fa-solid fa-dollar-sign"></i>
                                 <span class="d-none d-lg-inline custom-hide-ipad">Cashiers</span>
                             </a>
                         </li>
+                        @endif
                         <li>
-                            <a href="/orders" class="d-flex flex-column align-items-center text-muted nav-link disabled">
+                            <a href="/orders" class="d-flex flex-column align-items-center  nav-link {{ Request::is('orders') ? 'active' : '' }} ">
                                 <i class="fa-solid fa-bag-shopping"></i>
                                 <span class="d-none d-lg-inline custom-hide-ipad">Orders</span>
                             </a>
                         </li>
+                        @if(session('role')==='Admin')
                         <li>
                             <a href="/reports" class="d-flex flex-column align-items-center {{ Request::is('reports') ? 'active' : '' }}">
                                 <i class="fa-solid fa-circle-exclamation"></i>
                                 <span class="d-none d-lg-inline custom-hide-ipad">Reports</span>
                             </a>
                         </li>
-                        <li>
-                            <a href="/settings" class="d-flex flex-column align-items-center text-muted nav-link disabled">
+                        @endif
+                        <li class="d-none">
+                            <a href="/settings" class="d-flex flex-column align-items-center  nav-link {{ Request::is('settings') ? 'active' : '' }} ">
                                 <i class="fa-solid fa-gear"></i>
                                 <span class="d-none d-lg-inline custom-hide-ipad">Setting</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/logout" class="d-flex flex-column align-items-center text-danger nav-link ">
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                <span class="d-none d-lg-inline custom-hide-ipad">Log out</span>
                             </a>
                         </li>
                     </ul>
@@ -97,13 +112,15 @@
             <main class="col px-2 overflow-auto" style="max-height: 100vh;">
                 <div class="row gx-2">
                     {{ $slot }}
+            
                 </div>
             </main>
 
         </div>
+
     </div>
 
-    <!-- Scripts -->
+
     <script src="/js/cart.js"></script>
     <script src="/js/event.js"></script>
     <script src="/js/imagePreview.js"></script>

@@ -144,7 +144,44 @@ $(function(){
     });
 
 
-    // ----------------Added Order
+    // ----------------Update Cashier
+    $(document).on('click','.cashierUpdate',function(){
+        let row = $(this).closest('tr');
+        let id = row.find('td').eq(0).text().trim();
+        let name = row.find('td').eq(1).text().trim();
+        let email = row.find('td').eq(2).text().trim();
+        let role = row.find('td').eq(3).text().trim();
+        $("#id").val(id);
+        $("#name").val(name);
+        $("#email").val(email);
+        $("#role").val(role);
+        $("#cashierModalUpdate").modal('show');
+    });
+    $('#cashierUpdate').click(function(){
+        let id = $("#id").val();
+        let name = $("#name").val();
+        let email = $("#email").val();
+        let password = $("#password").val();
+        let role = $("#role").val();
+        $.post("/cashierUpdate",{
+            id : id,
+            name : name,
+            email : email,
+            password : password,
+            role : role,
+        },function(data,status){
+            alert("Account Updated Successfully");
+            window.location.href = "/cashiers";
+        });
+    });
+    $('#cashierDelete').click(function(){
+        let id = $('#id').val();
+        if(!confirm("Are you sure you want to delete this account?")) return;
+        $.post("cashierDelete/"+id,function(data,status){
+            alert("Account Deleted Successfully");
+            window.location.href = "/cashiers";
+        });
+    });
 
 
 

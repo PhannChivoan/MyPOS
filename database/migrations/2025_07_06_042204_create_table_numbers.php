@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customers', function (Blueprint $table) {
+        Schema::create('table_numbers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('phone')->nullable();
-            $table->string('address')->nullable();
-            $table->string('order_type')->nullable();
+            $table->string('table_name');
+            $table->boolean('is_occupied')->default(false);
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('table_numbers');
     }
 };

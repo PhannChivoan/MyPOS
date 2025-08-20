@@ -48,7 +48,7 @@ function renderCart() {
 var cartArea = document.getElementById('cart-area');
 cartArea.scrollTo({
     top: cartArea.scrollHeight,
-    behavior: 'smooth' // optional: for smooth scrolling
+    behavior: 'smooth' 
 });
 }
 
@@ -76,24 +76,19 @@ cartArea.scrollTo({
     var tax = subtotal * taxRate;
     var payout = subtotal + tax;
 
-    // Update the respective spans
     document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(2);
     document.getElementById('tax').textContent = '$' + tax.toFixed(2);
     document.getElementById('total').textContent = '$' + payout.toFixed(2);
 }
 // clear cart
 function clearCart() {
-    // Clear all items from the cart data
     cartItems = {};
-
-    // Re-render the cart UI
     renderCart();
 }
 
 
 // ------------------ Order Cart
 
-    // Before submitting, convert cartItems to JSON string for backend
 document.addEventListener("DOMContentLoaded", function () {
     const orderForm = document.getElementById('orderForm');
     const cartDataInput = document.getElementById('cartData');
@@ -112,10 +107,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // ----------------------------- Proceed
 $('#proceed').click(function () {
-    let customerId = $('#customerSelect').val();
+    let customerId = null;
+    let tableNumberId = null;
+    let orderType = null;
 
-    if (!customerId) {
-        alert('Please select a customer first!');
+    if ($("#checkDelivery").is(':checked')) {
+        customerId = $("#customerSelect").val();
+        orderType = 'delivery';
+    } else {
+        tableNumberId = $("#tableSelect").val();
+        orderType = 'dine-in';
+    }
+
+    if (!orderType || (orderType === 'delivery' && !customerId) || (orderType === 'dine-in' && !tableNumberId)) {
+        alert('Please select a customer or table!');
         return;
     }
 
@@ -130,18 +135,63 @@ $('#proceed').click(function () {
         return;
     }
 
-    $.post('/orders/save', {
-        customer_id: customerId,
-        cart: JSON.stringify(cartArray)
-    })
-    .done(function (response) {
-        alert(response.message || 'Order saved successfully!');
-        clearCart();
-    })
-    .fail(function (xhr) {
-        alert('Failed to save order: ' + xhr.responseText);
-    });
+    const data = {
+        order_type: orderType,
+        cart: JSON.stringify(cartArray),
+    };
+
+    if (orderType === 'dine-in') {
+        data.table_number_id = tableNumberId;
+    } else {
+        data.customer_id = customerId;
+    }
+
+    $.post('/orders/save', data)
+        .done(function (response) {
+    alert(response.message || 'Order saved!');
+    clearCart();
+
+    if (data.order_type === 'dine-in') {
+  
+        const currentOption = $(`#tableSelect option[value="${data.table_number_id}"]`);
+        currentOption.prop('disabled', true).text(currentOption.text() + ' (In Use)');
+        const nextAvailable = $('#tableSelect option:not(:disabled)').first();
+        if (nextAvailable.length > 0) {
+            $('#tableSelect').val(nextAvailable.val());
+        } else {
+            $('#tableSelect').val(''); 
+        }
+
+
+        const dineInContainer = document.getElementById('dineInContainer');
+        if (dineInContainer) {
+            const card = document.createElement('div');
+            card.className = "card rounded mx-2 mt-1";
+            card.style.width = "13rem";
+            card.style.height = "13rem";
+            card.setAttribute("data-bs-toggle", "modal");
+            card.setAttribute("data-bs-target", `#table${response.order_id}`);
+
+            card.innerHTML = `
+                <div class="card-body">
+                    <h5 class="card-title">Table Number</h5>
+                    <h4 class="card-subtitle mb-2 text-muted">${currentOption.text()}</h4>
+                    <p>Click to view</p>
+                    <p class="text-danger paid-status" data-order-id="${response.order_id}">unpaid</p>
+                </div>
+            `;
+            dineInContainer.appendChild(card);
+        }
+    }
+
+
+    if (data.order_type === 'delivery') {
+        $('#customerSelect').val('');
+    }
 });
+
+});
+
 
 
 

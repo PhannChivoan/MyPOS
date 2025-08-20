@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-use Cloudinary\Cloudinary;
+use App\Models\Table;
 
 use App\Models\Product;
-use App\Models\Customer;
 use App\Models\Category;
+use App\Models\Customer;
+use Cloudinary\Cloudinary;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class productController extends Controller
 {   
@@ -14,7 +16,7 @@ class productController extends Controller
     {
         $pro = Product::paginate(5);
         $cate = Category::all();
-        return view('Layout.table', ['pro' => $pro, 'cate' => $cate]);
+        return view('Layout.products', ['pro' => $pro, 'cate' => $cate]);
     }
 
     public function index()
@@ -22,13 +24,21 @@ class productController extends Controller
         $pro = Product::with('category')->get();
         $cate = Category::all();
         $customer = Customer::latest()->get();
-        return view('Layout.home', ['pro' => $pro, 'cate' => $cate, 'customer' => $customer]);
+        $table = Table::where('is_occupied', 0)->orderBy('id', 'asc')->get();
+
+        return view('Layout.home', ['pro' => $pro, 'cate' => $cate, 'customer' => $customer,'table'=>$table]);
     }
 
     public function create(Request $request)
     {
-
-
+        $validator = Validator::make($request->all(),[
+            'name'=>'required|min:3',
+            'price'=>'required|numeric',
+            'pic'=>'required|image|mimes:jpeg,jpg,png,gif|max:2048',
+        ]);
+        if($validator->fails()){
+            return back()->withErrors($validator)->withInput()->with('modal','exampleModal');
+        }
         $image = $request->file('pic');
 
         /** @var Cloudinary $cloudinary */
@@ -37,7 +47,7 @@ class productController extends Controller
         // Upload image to Cloudinary
         $uploadResult = $cloudinary->uploadApi()->upload($image->getRealPath());
 
-        $uploadedFileUrl = $uploadResult['secure_url']; // get secure URL
+        $uploadedFileUrl = $uploadResult['secure_url']; 
 
         Product::create([
             'pro_name' => $request->name,
@@ -66,7 +76,7 @@ class productController extends Controller
             // Upload image to Cloudinary
             $uploadResult = $cloudinary->uploadApi()->upload($image->getRealPath());
 
-            $uploadedFileUrl = $uploadResult['secure_url']; // get secure URL
+            $uploadedFileUrl = $uploadResult['secure_url']; 
 
             $product->pro_pic = $uploadedFileUrl;
         }

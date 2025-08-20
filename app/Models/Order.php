@@ -14,6 +14,9 @@ class Order extends Model
         'note',
         'status',
         'total',
+        'shift_id',
+        'user_id',
+        'table_number_id'
     ];
     public function customer()
     {
@@ -24,6 +27,9 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
-
+    public function tableNumber()
+    {
+    return $this->belongsTo(Table::class);
+    }
 
 }

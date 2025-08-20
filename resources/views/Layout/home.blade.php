@@ -12,18 +12,33 @@
 
 
 <x-modal id="exampleModal" action="/productCreate" method="post" enctype="multipart/form-data">
+  <x-slot name="header">
+    <h1 class="modal-title fs-5" id="exampleModalLabel">Create products</h1>
+  </x-slot>
       <div class="col-5 px-2 d-flex flex-column justify-content-between">
         <label>Image</label>
         <img id="previewImage" src="#" alt="Image Preview" class="img-fluid mt-2 d-none" style="max-height: 200px;" />
+         <div>
         <input type="file" name="pic" id="imageInput" class="form-control"/>
+        @error('pic')
+        <div class="text-danger">{{ $message }}</div>
+        @enderror
+        </div>
+       
          
       </div>
 
       <div class="col-7">
         <label>Name</label>
         <input type="text" class="form-control" name="name"/>
+        @error('name')
+        <div class="text-danger">{{ $message }}</div>
+        @enderror
         <label>Price</label>
         <input type="text" class="form-control" name="price"/>
+        @error('price')
+        <div class="text-danger">{{ $message }}</div>
+        @enderror
         <label>Category</label>
         <select class="form-control" name="category">
             @foreach($cate as $cates)
@@ -51,32 +66,42 @@
 
 
 <!-- Create customer -->
-<x-modal id="customerModalCreate" action="/customersCreate"  method="post">
+<x-modal id="customerModalCreate"  action="/customersCreate"  method="post">
+  <x-slot name="header">
+    <h1 class="modal-title fs-5" id="exampleModalLabel">Create Customer</h1>
+  </x-slot>
   <div class="container">
       <div class="row px-2 d-flex  justify-content-between">
 
         <div class="col-md-6">
           <label>Customer Name</label>
           <input type="text" class="form-control" name="customer"/>
-          <label>Table Number</label>
-          <input type="text" class="form-control" name="table"/>
-          
+          @error('customer')
+          <div class="text-danger"> {{ $message }}</div>
+          @enderror
+          <label>Phone Number</label>
+        <input type="text" class="form-control" name="phone" id="phone" disabled/>
+          @error('phone')
+          <div class="text-danger"> {{ $message }}</div>
+          @enderror
          
       </div>
       <div class="col-md-6">
         <label>Order Type</label>
-        <select class="form-control" id="order" name="order">
-          <option value="dine-in">Dine in</option>
+        <select class="form-control" id="order" name="order_type">
+          <option value="takeaway">Take Away</option>
           <option value="delivery">Delivery</option>
         </select>
-        <label>Phone Number</label>
-        <input type="text" class="form-control" name="phone" id="phone" disabled/>
+        
         
       </div>
 
         <div class="col-12">
           <label>Address</label>
           <textarea name="address" id="add" class="form-control" disabled></textarea>
+          @error('address')
+          <div class="text-danger"> {{ $message }}</div>
+          @enderror
           <!-- <label>Note</label>
           <textarea name="note" class="form-control"></textarea> -->
         </div>

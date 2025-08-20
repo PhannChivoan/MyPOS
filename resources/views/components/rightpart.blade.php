@@ -7,23 +7,43 @@
         <div class="d-flex flex-nowrap align-items-center justify-content-between gap-2 overflow-auto">
   <!-- + Add Customer -->
   <div>
-    <button class="btn btn-secondary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#customerModalCreate">
-      <span class="d-none d-lg-inline ms-1">+ Add </span> &nbsp;Customer
-    </button>
-  </div>
+  <button class="btn btn-secondary d-flex align-items-center text-nowrap" data-bs-toggle="modal" data-bs-target="#customerModalCreate">
+    <span class="d-none d-lg-inline me-1">+ Add</span>
+    Customer
+  </button>
+</div>
+
 
   <!-- Customer <select> -->
-  <div class="flex-grow-1 px-1">
+  <div class="flex-grow-1 px-1" style="flex: 0 0 100px;" id="tableBox">
+    <select class="form-control" id="tableSelect">
+      @foreach($table as $t)
+        <option value="{{$t->id}}">Table {{ $t->table_name }}</option>
+      @endforeach
+    </select>
+  </div>
+   <!-- Delivery and takeaway <select> -->
+  <div class="flex-grow-1 px-1" style="display:none;" id="customerBox">
     <select class="form-control" id="customerSelect">
+      <option>Delivery</option>
       @foreach($customer as $customers)
         <option value="{{$customers->id}}">{{ $customers->name }}</option>
       @endforeach
     </select>
   </div>
+  <div class="form-check">
+  <input class="form-check-input" type="checkbox" id="checkDelivery" onchange="toggleSelect()">
+  <label class="form-check-label" for="checkDelivery">
+    Delivery/Takeaway
+  </label>
+</div>
+  
 
   <!-- Action buttons -->
   <div class="d-flex gap-2">
+    @if(session('role')==='Admin')
     <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">+</button>
+    @endif
     <button class="btn btn-secondary"><i class="fa-solid fa-money-bill"></i></button>
     <button class="btn btn-secondary" onClick="clearCart()"><i class="fa-solid fa-rotate-right"></i></button>
   </div>

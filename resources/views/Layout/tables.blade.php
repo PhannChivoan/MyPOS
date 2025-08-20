@@ -8,7 +8,7 @@
   {{-- Dine In Section --}}
   <div class="col-12 mb-4">
     <h3>Dine In</h3>
-    <div class="d-flex flex-wrap justify-content-between">
+    <div class="d-flex flex-wrap gap-2">
       @foreach($order as $orders)
         <div class="card rounded mx-2 mt-1" style="width: 13rem;height:13rem;" data-bs-toggle="modal" data-bs-target="#table{{ $orders->id}}">
           <div class="card-body" style="cursor:pointer;">
@@ -103,7 +103,7 @@
   {{-- Delivery Section --}}
   <div class="col-12 mb-4">
     <h3>Delivery</h3>
-    <div class="d-flex flex-wrap justify-content-between">
+    <div class="d-flex flex-wrap gap-2">
       @foreach($delivery as $deliverys)
         <div class="card rounded mx-2 mt-1" style="width: 13rem;height:13rem;" data-bs-toggle="modal" data-bs-target="#delivery{{ $deliverys->id}}">
           <div class="card-body">
@@ -193,7 +193,7 @@
   {{-- Takeaway Section --}}
   <div class="col-12 mb-4">
     <h3>Takeaway</h3>
-    <div class="d-flex flex-wrap justify-content-between">
+    <div class="d-flex flex-wrap gap-2">
       @foreach($TakeawayOrders as $takeaway)
         <div class="card rounded mx-2 mt-1" style="width: 13rem;height:13rem;" data-bs-toggle="modal" data-bs-target="#takeaway{{ $takeaway->id}}">
           <div class="card-body">

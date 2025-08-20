@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Validator;
 class cashierController extends Controller
 {
     public function index(){
-        $cashier = Cashier::where("role","cashier")->get();
-        $admin = Cashier::where("role","admin")->get();
+        $cashier = Cashier::where("role","Cashier")->get();
+        $admin = Cashier::where("role","Admin")->get();
         return view('Layout.cashiers',['cashier'=>$cashier,'admin'=>$admin]);
     }
     public function create(Request $rq){

@@ -85,7 +85,7 @@ $(function(){
             processData: false,
             success: function (data) {
                 alert("Product updated successfully");
-                window.location.href = "/table";
+                window.location.href = "/products";
             },
             error: function (xhr) {
                 alert("Error: " + xhr.responseText);
@@ -108,7 +108,7 @@ $(function(){
                 _method:'DELETE'
             },success : function(data){
                 alert("Product Deleted Successfully!");
-                window.location.href="/table";
+                window.location.href="/products";
             }
         });
     });
